@@ -1,0 +1,94 @@
+import ollama
+from flask import Flask, request, jsonify  
+from flask_cors import CORS
+
+#llama3.1
+
+modelfile = '''
+FROM llama3.1
+
+SYSTEM Você se chama jarvis. É meu assistente pessoal e sempre está pronto pra me ajudar
+'''
+
+app = Flask(__name__)
+CORS(app)
+ollama.create(model='example', modelfile=modelfile)
+ollama.embeddings(model='example', prompt='Estudamos na usp, eu curso filosofia')
+messages = []
+models = ['example']
+
+def newModel(modelName, actAs):
+    mf = f'''
+    FROM llama3.1
+    SYSTEM {actAs}
+    '''
+
+    ollama.create(model=modelName, modelfile=mf)
+    print('ok!')
+    return
+
+def prompt(model, user_input, messages):
+
+    messages.append(
+        {
+            "role": "user",
+            "content": user_input,
+        }
+    )
+
+    response = ollama.chat(
+        model=model, 
+        messages=messages,
+    )
+
+    messages.append(response['message'])
+    print(response['message']['content'])
+    return response['message']['content']
+
+
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return 'oi :D'
+
+
+@app.route('/api/readinput', methods=['GET', 'POST'])
+def chat():
+    content = request.json
+    print('>>' + content['data'] + '<< REACT')
+    print('pensando como ' + content['model'] + '...')
+    return {'response': prompt(content['model'], content['data'], messages)}
+
+@app.route('/api/newmodel', methods=['GET', 'POST'])
+def newmodel():
+    content = request.json
+    print('>> Name: ' + content['name'] + ' << REACT')
+    print('>> ActAs: ' + content['act_as'] + ' << REACT')
+    models.append(content['name'])
+    print('# Novo modelo adicionado #')
+    print(models)
+    return {'response': newModel(content['name'], content['act_as'])}
+
+
+@app.route('/api/deleteData', methods=['GET', 'POST'])
+def deleteData():
+    print('Apagando data...')
+    global messages
+    messages.clear()
+    print(messages)
+    print('Apagado!')
+    return {'Apagado': messages}
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port='5000')
+
+
+# while True:
+#     user_input = input('> ')
+#     prompt("example", user_input, messages)
+#

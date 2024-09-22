@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+</head>
+<body>
+    <h1>ChatBot v1</h1>
+    <form method="post" action="/chat">    
+      <input type="text" id='msg' name="msg">
+      <button type="submit">O</button>
+    </form>
+    {% if response %}
+      <h2>{{ response }}</h2>
+    {% endif %}
+</body>
+</html>
