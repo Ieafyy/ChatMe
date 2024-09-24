@@ -27,9 +27,9 @@ function ModalNewChat({ isOpen, onClose, setActualModel }) {
     }
 
     return (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50">
-            <div className="bg-white p-20 rounded-xl border-2 border-black text-center">
-                <h2 className="mb-2 font-bold">Criar um novo modelo: </h2>
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50 text-black">
+            <div className="bg-white px-20 py-8 rounded-xl border-2 border-black text-center">
+                <h2 className="mb-2 font-bold text-3xl">Criar um novo modelo</h2>
                 <p>Escreva como o modelo deverá se chamar</p>
                 <input value={modelName} onChange={(e) => setModelName(e.target.value)} className="border-black border-2 rounded-md px-1 mb-5"/>
                 <p>Escreva como o modelo deverá se comportar</p>

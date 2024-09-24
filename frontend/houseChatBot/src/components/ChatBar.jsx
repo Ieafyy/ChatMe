@@ -31,11 +31,11 @@ function ChatBar({ actualModel, responses, setResponses }) {
     return (
         <>
             <div>
-                <div className="mx-10 w-screen lg:w-11/12 mt-5 max-h-[60vh] overflow-y-auto border border-gray-300 rounded-lg p-4">
+                <div className="mx-10 w-screen bg-slate-200 lg:w-11/12 mt-5 max-h-[60vh] overflow-y-auto rounded-lg p-4">
                 {responses.map((response, index) => (
                         <div key={index}>
-                            <p className="border-b-2 py-2"><strong style={{color: 'green'}}>Você:</strong> {response.message}</p>
-                            <p className="border-b-2 py-2"><strong style={{color: 'red'}}>ChatBot:</strong> {response.response['response']}</p>
+                            <p className="border-b-2 py-2 border-slate-300"><strong style={{color: 'green'}}>Você:</strong> {response.message}</p>
+                            <p className="border-b-2 py-2 border-slate-300"><strong style={{color: 'red'}}>{ actualModel }:</strong> {response.response['response']}</p>
                         </div>
                     ) )}
                 {loading && <p className="mt-2 font-bold">Carregando...</p>}

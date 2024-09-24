@@ -22,10 +22,9 @@ function ModalTrade({ isOpen, onClose, setActualModel, actualModel }) {
 
     if (isOpen) return (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50">
-            <div className="bg-white p-20 rounded-xl border-2 border-black text-center">
-                <h2 className="mb-2 font-bold text-3xl mb-5">Selecione o modelo: </h2>
-                <select id="dropdown" value={actualModel} onChange={handleChange} className="text-xl mx-5">
-                    <option value="">Selecione...</option>
+            <div className="bg-white text-black px-20 py-8 rounded-xl border-2 border-black text-center">
+                <h2 className="mb-2 font-bold text-3xl mb-5">Selecione o modelo</h2>
+                <select id="dropdown" value={actualModel} onChange={handleChange} className="border-2 border-black text-xl mx-5 rounded-xl py-2 px-2 bg-slate-200">
                     {AllModels.map((option) => (
                     <option key={option} value={option}>
                         {option}
@@ -33,7 +32,7 @@ function ModalTrade({ isOpen, onClose, setActualModel, actualModel }) {
                     ))}
                 </select>
                 <div className="flex gap-10 justify-center items-center mt-5">
-                    <button className="border-2 border-green-800 px-4 rounded-xl bg-green-300" onClick={onClose}>Confirmar</button>
+                    <button className="border-2 border-green-800 px-4 rounded-xl bg-green-300 mt-5" onClick={onClose}>Confirmar</button>
                 </div>
             </div>
         </div>
