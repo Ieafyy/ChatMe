@@ -2,8 +2,6 @@ import React from "react"
 
 function ModalTrade({ isOpen, onClose, setActualModel, actualModel }) {
 
-    const [modelName, setModelName] = React.useState('')
-    //const [actualModel, setModelConfs] = React.useState('')
     const [AllModels, setAllModels] = React.useState([])
 
     React.useEffect(() => {
