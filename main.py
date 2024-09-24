@@ -12,10 +12,10 @@ SYSTEM Você se chama jarvis. É meu assistente pessoal e sempre está pronto pr
 
 app = Flask(__name__)
 CORS(app)
-ollama.create(model='example', modelfile=modelfile)
-ollama.embeddings(model='example', prompt='Estudamos na usp, eu curso filosofia')
+ollama.create(model='Leafy', modelfile=modelfile)
+ollama.embeddings(model='Leafy', prompt='Estudamos na usp, eu curso filosofia')
 messages = []
-models = ['example']
+models = ['Leafy']
 
 def newModel(modelName, actAs):
     mf = f'''
@@ -79,7 +79,10 @@ def deleteData():
     return {'Apagado': messages}
 
 
-
+@app.route('/api/getModels', methods=['GET'])
+def getModels():
+    print('enviando dados...')
+    return {'models': models}
 
 
 
@@ -90,5 +93,5 @@ if __name__ == '__main__':
 
 # while True:
 #     user_input = input('> ')
-#     prompt("example", user_input, messages)
+#     prompt("Leafy", user_input, messages)
 #
