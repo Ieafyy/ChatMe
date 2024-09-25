@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from "react"
 import ModalNewChat from "./ModalNewChat"
 import ModalTrade from "./ModalTrade";

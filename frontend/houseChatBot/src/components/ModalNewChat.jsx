@@ -1,15 +1,14 @@
+/* eslint-disable react/prop-types */
+
 import React from "react"
 
 function ModalNewChat({ isOpen, onClose, setActualModel }) {
-    if (!isOpen) return null;
-
+    
     const [modelName, setModelName] = React.useState('')
     const [modelConfs, setModelConfs] = React.useState('')
-    const [loading, setLoading] = React.useState(false)
 
     const handleGen = async () => {
         try{
-            setLoading(true)
             await fetch('http://192.168.0.14:5000/api/newmodel' , {
                 method: 'POST',
                 headers: {
@@ -20,13 +19,12 @@ function ModalNewChat({ isOpen, onClose, setActualModel }) {
         } catch (e){
             console.log(e)
         } finally {
-            setLoading(false)
             setActualModel(modelName)
         }
 
     }
 
-    return (
+    if(isOpen) return (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-400 bg-opacity-50 text-black">
             <div className="bg-white px-20 py-8 rounded-xl border-2 border-black text-center">
                 <h2 className="mb-2 font-bold text-3xl">Criar um novo modelo</h2>
