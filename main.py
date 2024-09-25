@@ -63,6 +63,9 @@ def newmodel():
     content = request.json
     print('>> Name: ' + content['name'] + ' << REACT')
     print('>> ActAs: ' + content['act_as'] + ' << REACT')
+    if content['name'] in models:
+        print('Modelo Ja existente :(')
+        return {'error': 'Modelo ja existe'}
     models.append(content['name'])
     print('# Novo modelo adicionado #')
     print(models)
