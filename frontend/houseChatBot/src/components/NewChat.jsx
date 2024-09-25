@@ -42,10 +42,10 @@ function NewChat({ setActualModel, setResponses, actualModel }) {
     
     return (
         <>
-        <div className="flex gap-20">
-            <h1 onClick={handleClick} className="text-center text-3xl font-bold hover:text-green-500 hover:scale-105 duration-300">(+) novo Chat</h1>
-            <h1 onClick={handleClickTrade} className="text-center text-3xl font-bold hover:text-amber-500 hover:scale-105 duration-300">(/) trocar Chat</h1>
-            <h1 onClick={handleClickClear} className="text-center text-3xl font-bold hover:text-red-700 hover:scale-105 duration-300">(-) Limpar memoria</h1>
+        <div className="flex gap-10">
+            <h1 onClick={handleClick} className="hover:cursor-pointer text-2xl font-bold hover:text-green-500 hover:scale-105 duration-300">(+) novo Chat</h1>
+            <h1 onClick={handleClickTrade} className="hover:cursor-pointer text-2xl font-bold hover:text-amber-500 hover:scale-105 duration-300">(/) trocar Chat</h1>
+            <h1 onClick={handleClickClear} className="hover:cursor-pointer text-2xl font-bold hover:text-red-700 hover:scale-105 duration-300">(-) Limpar memoria</h1>
         </div>
             <ModalNewChat isOpen={isModalOpen} onClose={closeModal} setActualModel={setActualModel} />     
             <ModalTrade isOpen={modalTrade} onClose={closeModal} setActualModel={setActualModel} actualModel={actualModel}/>
