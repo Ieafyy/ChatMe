@@ -36,7 +36,6 @@ def get_flight_times(departure: str, arrival: str) -> str:
 
     return json.dumps(flights.get(key, {'error': 'Flight not found'}))
 
-
 def get_weather(city: str) -> str:
     base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
@@ -49,8 +48,8 @@ def get_weather(city: str) -> str:
     
     if response.status_code == 200:
         data = response.json()
-        temperature = data['main']['temp']
-        return json.dumps({'temperature': temperature})
+        #temperature = data['main']['temp']
+        return json.dumps(data)
     else:
         print("Error:", response.status_code, response.json().get('message', ''))
         return json.dumps({'error': 'city not find'})
@@ -105,13 +104,13 @@ def prompt(model, user_input, messages):
                 'type': 'function',
                 'function': {
                     'name': 'get_weather',
-                    'description': 'Get the current temperature in a city',
+                    'description': 'Get the current weather condition in a city',
                     'parameters': {
                         'type': 'object',
                         'properties': {
                             'city': {
                                 'type': 'string',
-                                'description': 'The city to search the temperature',
+                                'description': 'The city to search the weather condition',
                             },
                         },
                         'required': ['city'],
