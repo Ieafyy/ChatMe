@@ -2,7 +2,7 @@
 
 import React from "react"
 
-function ChatBar({ actualModel, responses, setResponses }) {
+function ChatBar({ actualModel, responses, setResponses, useContext }) {
 
     const [msg, setMsg] = React.useState('')
     const [loading, setLoading] = React.useState(false)
@@ -16,7 +16,7 @@ function ChatBar({ actualModel, responses, setResponses }) {
                 headers: {
                     'content-type': 'application/json',
                 },
-                body: JSON.stringify({ 'data': msg, 'model': actualModel })
+                body: JSON.stringify({ 'data': msg, 'model': actualModel, 'useContext': useContext })
             })
             setMsg('')
             const data = await res.json();

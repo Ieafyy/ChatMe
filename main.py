@@ -7,7 +7,7 @@ import requests
 
 #llama3.1
 
-modelfile = '''
+modelfile = ''' 
 FROM llama3.1
 
 SYSTEM Você se chama jarvis. É meu assistente pessoal e sempre está pronto pra me ajudar
@@ -66,7 +66,7 @@ def newModel(modelName, actAs):
     print('ok!')
     return
 
-def prompt(model, user_input, messages):
+def prompt(model, user_input, messages, useContext):
 
     messages.append(
         {
@@ -75,50 +75,56 @@ def prompt(model, user_input, messages):
         }
     )
 
-    response = ollama.chat(
+    if useContext:
+        response = ollama.chat(
+            model=model, 
+            messages=messages,
+            tools=[
+                {
+                    'type': 'function',
+                    'function': {
+                        'name': 'get_flight_times',
+                        'description': 'Get the flight times between two cities',
+                        'parameters': {
+                            'type': 'object',
+                            'properties': {
+                                'departure': {
+                                    'type': 'string',
+                                    'description': 'The departure city (airport code)',
+                                },
+                                'arrival': {
+                                    'type': 'string',
+                                    'description': 'The arrival city (airport code)',
+                                },
+                            },
+                            'required': ['departure', 'arrival'],
+                        },
+                    },
+                },
+                {
+                    'type': 'function',
+                    'function': {
+                        'name': 'get_weather',
+                        'description': 'Get the current weather condition in a city',
+                        'parameters': {
+                            'type': 'object',
+                            'properties': {
+                                'city': {
+                                    'type': 'string',
+                                    'description': 'The city to search the weather condition',
+                                },
+                            },
+                            'required': ['city'],
+                        },
+                    },
+                },
+            ]
+        )
+    
+    else:
+        response = ollama.chat(
         model=model, 
-        messages=messages,
-        tools=[
-            {
-                'type': 'function',
-                'function': {
-                    'name': 'get_flight_times',
-                    'description': 'Get the flight times between two cities',
-                    'parameters': {
-                        'type': 'object',
-                        'properties': {
-                            'departure': {
-                                'type': 'string',
-                                'description': 'The departure city (airport code)',
-                            },
-                            'arrival': {
-                                'type': 'string',
-                                'description': 'The arrival city (airport code)',
-                            },
-                        },
-                        'required': ['departure', 'arrival'],
-                    },
-                },
-            },
-            {
-                'type': 'function',
-                'function': {
-                    'name': 'get_weather',
-                    'description': 'Get the current weather condition in a city',
-                    'parameters': {
-                        'type': 'object',
-                        'properties': {
-                            'city': {
-                                'type': 'string',
-                                'description': 'The city to search the weather condition',
-                            },
-                        },
-                        'required': ['city'],
-                    },
-                },
-            },
-        ]
-    )
+        messages=messages)
 
     messages.append(response['message'])
 
@@ -136,6 +142,7 @@ def prompt(model, user_input, messages):
  
         for tool in response['message']['tool_calls']:
             function_to_call = available_functions[tool['function']['name']]
+            print('>> FUNC: ' + str(function_to_call))
             function_args = tool['function']['arguments']
             function_response = function_to_call(**function_args)
             messages.append(
@@ -160,7 +167,8 @@ def chat():
     content = request.json
     print('>>' + content['data'] + '<< REACT')
     print('pensando como ' + content['model'] + '...')
-    return {'response': prompt(content['model'], content['data'], messages)}
+    print('CONTEXTO: ' + str(content['useContext']))
+    return {'response': prompt(content['model'], content['data'], messages, content['useContext'])}
 
 @app.route('/api/newmodel', methods=['GET', 'POST'])
 def newmodel():
