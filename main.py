@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import requests
-
+import random 
 
 #llama3.1
 
@@ -18,7 +18,11 @@ CORS(app)
 ollama.create(model='Leafy', modelfile=modelfile)
 ollama.embeddings(model='Leafy', prompt='Estudamos na usp, eu curso filosofia')
 messages = []
+todo = []
 models = ['Leafy']
+
+def get_random_number(start: str, end: str) -> str:
+    return json.dumps({'number': str(random.randint(int(start), int(end)))})
 
 def get_flight_times(departure: str, arrival: str) -> str:
 
@@ -54,7 +58,27 @@ def get_weather(city: str) -> str:
         print("Error:", response.status_code, response.json().get('message', ''))
         return json.dumps({'error': 'city not find'})
 
-
+def todo_list(task: str, action: str) -> str:
+    global todo
+    print('=> ACTION: ' + action)
+    if action == 'add':
+        if task.find(','):
+            _list = task.split(',')
+            todo += _list
+        else: todo.append(task)
+        print(task + ' add!')
+        return json.dumps({'fullList': todo})
+    if action == 'read':
+        print('just reading :)')
+    if action == 'remove':
+        print(task + ' remove!')
+        if task.find(','):
+            _list = task.split(',')
+            todo = list(set(todo) - set(_list))
+        else: todo.remove(task)
+    print('lista atual: ')
+    print(todo)
+    return json.dumps({'fullList': todo})
 
 def newModel(modelName, actAs):
     mf = f'''
@@ -118,6 +142,48 @@ def prompt(model, user_input, messages, useContext):
                         },
                     },
                 },
+                {
+                    'type': 'function',
+                    'function': {
+                        'name': 'get_random_number',
+                        'description': 'Generate a random number between the start and the end values',
+                        'parameters': {
+                            'type': 'object',
+                            'properties': {
+                                'start': {
+                                    'type': 'string',
+                                    'description': 'The initial value to generate a random number',
+                                },
+                                'end': {
+                                    'type': 'string',
+                                    'description': 'The final value to generate a random number',
+                                }
+                            },
+                            'required': ['start', 'end'],
+                        },
+                    },
+                },
+                {
+                    'type': 'function',
+                    'function': {
+                        'name': 'todo_list',
+                        'description': 'management a to-do list',
+                        'parameters': {
+                            'type': 'object',
+                            'properties': {
+                                'task': {
+                                    'type': 'string',
+                                    'description': 'A task to append in the todo list',
+                                },
+                                'action': {
+                                    'type': 'string',
+                                    'description': 'Can be: add, remove or read. Its the action you need to perform in the to-do list',
+                                },
+                            },
+                            'required': ['task', 'action'],
+                        },
+                    },
+                },
             ]
         )
     
@@ -137,7 +203,9 @@ def prompt(model, user_input, messages, useContext):
     if response['message'].get('tool_calls'):
         available_functions = {
             'get_flight_times': get_flight_times,
-            'get_weather': get_weather
+            'get_weather': get_weather,
+            'get_random_number': get_random_number,
+            'todo_list': todo_list
         }
  
         for tool in response['message']['tool_calls']:
